@@ -35,10 +35,14 @@ parser parse = info ( helper <*> parse ) fullDesc
 main :: IO ()
 main = do
   c <- execParser $ parser parseConf
+  putStrLn $ "Starting on :" ++ (show $ confPort c)
   t <- getCurrentTime
-  runTCPServer (serverSettings (confPort c) "*") $ \appData ->
+  runTCPServer (serverSettings (confPort c) "*") $ \appData -> do
+    putStrLn $ "Begin " ++ name c t
     runResourceT $
       appSource appData $$
-      sinkFile (confFile c ++ "-" ++ timestamp t) where
-        timestamp = formatTime defaultTimeLocale "%Y%m%d-%H%M%S"
+      sinkFile $ name c t
+    putStrLn $ "End   " ++ name c t where
+      name c t = confFile c ++ "-" ++ timestamp t ++ ".dat"
+      timestamp = formatTime defaultTimeLocale "%Y%m%d-%H%M%S"
 

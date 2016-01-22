@@ -4,5 +4,6 @@
 *.chs.h
 *~
 *.*~
+*.dat
 .stack-work/
 dist
