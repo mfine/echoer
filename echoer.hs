@@ -36,8 +36,8 @@ main :: IO ()
 main = do
   c <- execParser $ parser parseConf
   putStrLn $ "Starting on :" ++ (show $ confPort c)
-  t <- getCurrentTime
   runTCPServer (serverSettings (confPort c) "*") $ \appData -> do
+    t <- getCurrentTime
     putStrLn $ "Begin " ++ name c t
     runResourceT $
       appSource appData $$
