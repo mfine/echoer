@@ -1,0 +1,8 @@
+*.o
+*.hi
+*.chi
+*.chs.h
+*~
+*.*~
+.stack-work/
+dist

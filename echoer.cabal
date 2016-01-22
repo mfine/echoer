@@ -1,0 +1,25 @@
+name:                echoer
+version:             0.1.0.0
+synopsis:            Echo a stream into a file.
+description:         Echo a stream into a file.
+homepage:            http://github.com/mfine/echoer
+license:             BSD3
+author:              Mark Fine
+maintainer:          mark.fine@gmail.com
+copyright:           2016 Mark Fine
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable echoer
+  main-is:             echoer.hs
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , conduit-combinators
+                     , conduit-extra
+  default-language:    Haskell2010
+  default-extensions:  OverloadedStrings
+
+source-repository head
+  type:     git
+  location: https://github.com/mfine/echoer
