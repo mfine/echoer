@@ -1,11 +1,13 @@
-import Conduit
-import Data.Conduit.Network
-import Data.Time
-import Options.Applicative
+import           Conduit
+import qualified Data.Conduit.Combinators as C
+import           Data.Conduit.Network
+import           Data.Time
+import           Options.Applicative
 
 data Conf = Conf
-  { confFile :: String
-  , confPort :: Int
+  { confFile  :: String
+  , confPort  :: Int
+  , confBytes :: Maybe Int
   } deriving ( Eq, Show )
 
 file :: Parser String
@@ -26,8 +28,16 @@ port =
     <> value   5000
     <> help    "Port to listen on"
 
+bytes :: Parser Int
+bytes =
+  option auto
+    $  long    "bytes"
+    <> short   'b'
+    <> metavar "BYTES"
+    <> help    "Number of bytes to listen to"
+
 parseConf :: Parser Conf
-parseConf = Conf <$> file <*> port
+parseConf = Conf <$> file <*> port <*> optional bytes
 
 parser :: Parser a -> ParserInfo a
 parser parse = info ( helper <*> parse ) fullDesc
@@ -41,8 +51,9 @@ main = do
     putStrLn $ "Begin " ++ name c t
     runResourceT $
       appSource appData $$
-      sinkFile $ name c t
+      C.takeExactlyE 5 $ sinkFile $ name c t
     putStrLn $ "End   " ++ name c t where
       name c t = confFile c ++ "-" ++ timestamp t ++ ".dat"
       timestamp = formatTime defaultTimeLocale "%Y%m%d-%H%M%S"
+      maybe' m b a = maybe b a m
 
