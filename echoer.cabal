@@ -20,6 +20,15 @@ executable echoer
   default-language:    Haskell2010
   default-extensions:  OverloadedStrings
 
+executable echoer-data
+  main-is:             echoer-data.hs
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , conduit-combinators
+                     , conduit-extra
+  default-language:    Haskell2010
+  default-extensions:  OverloadedStrings
+
 source-repository head
   type:     git
   location: https://github.com/mfine/echoer
