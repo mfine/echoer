@@ -48,13 +48,14 @@ main = do
   putStrLn $ "Starting on :" ++ (show $ confPort c)
   runTCPServer (serverSettings (confPort c) "*") $ \appData -> do
     t <- getCurrentTime
-    putStrLn $ "Begin " ++ name c t
+    putStrLn $ "B " ++ name c t
     runResourceT $
       appSource appData $$
-      maybe' (confBytes c) id C.takeExactlyE $
+      maybe id C.takeExactlyE (confBytes c) $
         sinkFile $ name c t
-    putStrLn $ "End   " ++ name c t where
+    t' <- getCurrentTime
+    putStrLn $ "E " ++ name c t ++ " " ++ timediff t' t where
       name c t = confFile c ++ "-" ++ timestamp t ++ ".dat"
       timestamp = formatTime defaultTimeLocale "%Y%m%d-%H%M%S"
-      maybe' m b a = maybe b a m
+      timediff t = show . diffUTCTime t
 
