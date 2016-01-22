@@ -32,7 +32,7 @@ bytes :: Parser Int
 bytes =
   option auto
     $  long    "bytes"
-    <> short   'b'
+    <> short   'n'
     <> metavar "BYTES"
     <> help    "Number of bytes to listen to"
 
@@ -51,7 +51,8 @@ main = do
     putStrLn $ "Begin " ++ name c t
     runResourceT $
       appSource appData $$
-      C.takeExactlyE 5 $ sinkFile $ name c t
+      maybe' (confBytes c) id C.takeExactlyE $
+        sinkFile $ name c t
     putStrLn $ "End   " ++ name c t where
       name c t = confFile c ++ "-" ++ timestamp t ++ ".dat"
       timestamp = formatTime defaultTimeLocale "%Y%m%d-%H%M%S"
